@@ -3,6 +3,7 @@ import pandas as pd
 # from dotenv import load_dotenv 
 import numpy as np 
 import os 
+import matplotlib.pyplot as plt
 
 os.system('cls')
 # load_dotenv()
@@ -19,7 +20,7 @@ try:
 
     ENDERECO_DADOS = 'https://www.ispdados.rj.gov.br/Arquivos/BaseDPEvolucaoMensalCisp.csv'
 
-    df_ocorrencias = pd.read_csv
+    df_ocorrencias = pd.read_csv(ENDERECO_DADOS, sep=';', encoding='iso-8859-1') 
 
     df_roubo_veiculo = df_ocorrencias[['munic','roubo_veiculo']] 
 
@@ -76,9 +77,97 @@ try:
     
     # maiores
     df_roubo_veiculos_maiores = df_roubo_veiculo[df_roubo_veiculo['roubo_veiculo'] > q3 ]
-    print('\nMunicipios com menores valores')
+    print('\nMunicipios com maiores valores')
     print(40*'=')
     print(df_roubo_veiculos_maiores)
     
 except Exception as e:
     print(f'Erro ao calcular as informações {e}')
+
+#  Medida de dispersão ( Amplitude Total)
+    
+try: 
+
+    # amplitude total = maior valor - menor valor
+    # quanto mais proximo do zero, maior a homogeneidade dos dados 
+    # se for igual a 0, todos os dados sao iguais 
+    # Quanto mais proximo do maior valor, maior a dispersão
+
+    maximo = np.max(array_roubo_veiculo)
+    minimo = np.min(array_roubo_veiculo)
+    amplitude = maximo -  minimo
+
+    print('\Medidas de dispersão')
+    print(40*'=')
+    print(f'Máximo: {maximo}')
+    print(f'Mínimo: {minimo}')
+    print(f'Amplitude total: {amplitude}')
+
+except Exception as e:
+    print('Erro ao calcular a medida de dispersão')
+
+#  Outliers
+    
+try: 
+#   IQR ( InterQuartil)
+#   É a amplitude dos 50% dos dados mais centrais
+#   IQR = q3 - q1
+#   Ele ignora os valores mais extremos, max e min estão fora.
+#   Não sofre influencia dos extremos
+#   quanto mais proximo do zero, maior a homogeneidade dos dados 
+#   se for igual a 0, todos os dados sao iguais 
+#   Quanto mais proximo do q3 ,maior a dispersão dos dados mais centrais 
+    
+    iqr = q3 - q1
+
+# LIMITE INFERIOR
+    limiteInferior = q1 - (1.5 * iqr)
+
+# LIMITE SUPERIOR
+    limiteSuperior = q3 + (1.5 * iqr)
+
+    df_roubo_veiculo_outliers_superiores = df_roubo_veiculo[df_roubo_veiculo['roubo_veiculo'] > limiteSuperior]
+
+    df_roubo_veiculo_outliers_inferior = df_roubo_veiculo[df_roubo_veiculo['roubo_veiculo'] < limiteInferior]
+
+    print('\nMedidas')
+    print(40*'=')
+    print(f'Mínimo: {minimo}')
+    print(f'Limite Inferior: {limiteInferior}')
+    print(f'Q1: {q1}')
+    print(f'Q2: {q2}') #mediana
+    print(f'Q3: {q3}')
+    print(f'IQR: {iqr}')
+    print(f'Limite Superior: {limiteSuperior}')
+    print(f'Máximo: {maximo}')
+
+    print('\nOutliers Superiores: ')
+    print(40 * '=')
+    if len(df_roubo_veiculo_outliers_superiores) == 0:
+        print('Não Existe outliers superiores')
+    else: 
+        print(df_roubo_veiculo_outliers_superiores)
+        
+    print('\nOutliers Inferiores: ')
+    print(40 * '=')
+    if len(df_roubo_veiculo_outliers_inferior) == 0:
+        print('Não Existe outliers inferiores')
+    else: 
+        print(df_roubo_veiculo_outliers_inferior)
+
+except Exception as e:
+    print('Erro ao calcular os outliers')
+
+
+# Visualizando os dados
+try: 
+    # mostrando cidades com maiores roubos
+    plt.figure(figsize=(16, 8))
+    # df_roubo_veiculos_maiores = df_roubo_veiculos_maiores.sort_values(by='roubo_veiculo', ascending=True).head(10)
+    plt.barh(df_roubo_veiculo_outliers_superiores['munic'],df_roubo_veiculo_outliers_superiores['roubo_veiculo'])
+    plt.gca().invert_yaxis()
+    plt.title('Cidades com maiores indices de roubo de carros')
+    plt.show()
+
+except Exception as e:
+    print(f'Erro ao plotar gráfico: {e}')

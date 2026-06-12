@@ -54,27 +54,57 @@ try:
     print(f'Q2: {q2}')
     print(f'Q3: {q3}')
 
-    df_estelionatos_menor = df_Ano_Estelionatos[df_Ano_Estelionatos['estelionato'] < q1 ]
-    print('\nAnos com menores quantidades')
-    print(40*'=')
-    print(df_estelionatos_menor.head(10).sort_values(by='estelionato', ascending=True))
+    # df_estelionatos_menor = df_Ano_Estelionatos[df_Ano_Estelionatos['estelionato'] < q1 ]
+    # print('\nAnos com menores quantidades')
+    # print(40*'=')
+    # print(df_estelionatos_menor.head(10).sort_values(by='estelionato', ascending=True))
     
-    df_estelionatos_maiores = df_Ano_Estelionatos[df_Ano_Estelionatos['estelionato'] > q3 ]
-    print('\nAnos com maiores quantidades')
-    print(40*'=')
-    print(df_estelionatos_maiores.head(10))
+    # df_estelionatos_maiores = df_Ano_Estelionatos[df_Ano_Estelionatos['estelionato'] > q3 ]
+    # print('\nAnos com maiores quantidades')
+    # print(40*'=')
+    # print(df_estelionatos_maiores.head(10))
 
 
-    df_munic_estelionatos_menores = df_munic_estelionato[df_munic_estelionato['estelionato'] < q1 ]
-    print('\nMunicipios com menores valores')
-    print(40*'=')
-    print(df_munic_estelionatos_menores.sort_values(by = 'estelionato', ascending=True).head(10))
+    # df_munic_estelionatos_menores = df_munic_estelionato[df_munic_estelionato['estelionato'] < q1 ]
+    # print('\nMunicipios com menores valores')
+    # print(40*'=')
+    # print(df_munic_estelionatos_menores.sort_values(by = 'estelionato', ascending=True).head(10))
     
     
-    df_munic_estelionato_maiores = df_munic_estelionato[df_munic_estelionato['estelionato'] > q3 ]
-    print('\nMunicipios com menores valores')
-    print(40*'=')
-    print(df_munic_estelionato_maiores.head(10))
+    # df_munic_estelionato_maiores = df_munic_estelionato[df_munic_estelionato['estelionato'] > q3 ]
+    # print('\nMunicipios com menores valores')
+    # print(40*'=')
+    # print(df_munic_estelionato_maiores.head(10))
 
 except Exception as e:
     print(f'Erro ao calcular as informações {e}')
+
+    #  Medida de dispersão ( Amplitude Total)
+try: 
+
+    # amplitude total = maior valor - menor valor
+    # quanto mais proximo do zero, maior a homogeneidade dos dados 
+    # se for igual a 0, todos os dados sao iguais 
+    # Quanto mais proximo do maior valor, maior a dispersão
+
+    maximo = np.max(array_estelionato)
+    minimo = np.min(array_estelionato)
+    amplitude = maximo -  minimo
+
+    print('\Medidas de dispersão')
+    print(40*'=')
+    print(f'Máximo: {maximo}')
+    print(f'Mínimo: {minimo}')
+    print(f'Amplitude total: {amplitude}')
+    
+    iqr = q1 - q3
+
+    print(iqr)
+    LimiteInferior = q1 - (1.5 * iqr)
+    LimiteSuperior = q1 + (1.5 * iqr)
+
+    print(LimiteInferior)
+    print(LimiteSuperior)
+
+except Exception as e:
+    print('Erro ao calcular os outliers')
