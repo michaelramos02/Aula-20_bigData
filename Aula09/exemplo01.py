@@ -97,7 +97,7 @@ try:
     minimo = np.min(array_roubo_veiculo)
     amplitude = maximo -  minimo
 
-    print('\Medidas de dispersão')
+    print('\nMedidas de dispersão')
     print(40*'=')
     print(f'Máximo: {maximo}')
     print(f'Mínimo: {minimo}')
